@@ -20,7 +20,8 @@ mujer <- aux %>%
          V131,AWFACTT,V502, V503, V507, V508, V509,V729, V730, 
          V605, V613, V621, V627, V628, V629,
          V743A, V743B, V743C, V743D, V743E, V743F, 
-         V744A, V744B, V744C, V744D, V744E, V746)
+         V744A, V744B, V744C, V744D, V744E, V746,
+         V133, V512, V715)
 
 dic <- data.frame(
   variable = names(mujer),
@@ -49,7 +50,8 @@ mujer <- aux %>%
          V131,AWFACTT,V502, V503, V507, V508, V509,V729, V730, 
          V605, V613, V621, V627, V628, V629,
          V743A, V743B, V743C, V743D, V743E, V743F, 
-         V744A, V744B, V744C, V744D, V744E, V746)
+         V744A, V744B, V744C, V744D, V744E, V746,
+         V133, V512, V715)
 
 dic <- data.frame(
   variable = names(mujer),
@@ -78,7 +80,8 @@ mujer <- aux %>%
          V131,AWFACTT,V502, V503, V507, V508, V509,V729, V730, 
          V605, V613, V621, V627, V628, V629,
          V743A, V743B, V743C, V743D, V743E, V743F, 
-         V744A, V744B, V744C, V744D, V744E, V746)
+         V744A, V744B, V744C, V744D, V744E, V746,
+         V133, V512, V715)
 
 dic <- data.frame(
   variable = names(mujer),
@@ -107,7 +110,8 @@ mujer <- aux %>%
          V131,AWFACTT,V502, V503, V507, V508, V509,V729, V730, 
          V605, V613, V621, V627, V628, V629,
          V743A, V743B, V743C, V743D, V743E, V743F, 
-         V744A, V744B, V744C, V744D, V744E, V746)
+         V744A, V744B, V744C, V744D, V744E, V746,
+         V133, V512, V715)
 
 dic <- data.frame(
   variable = names(mujer),
@@ -117,6 +121,7 @@ dic <- data.frame(
 
 mujer_2025 <- mujer
 diccionario_2025 <- dic
+
 
 # Save ----
 save(mujer_2010, mujer_2015, mujer_2020, mujer_2025, 
