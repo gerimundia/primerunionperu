@@ -9,19 +9,21 @@ path1 <- "datos_2010/"
   
 REC0111 <- read_sav(paste0(path0, path1, "REC0111.SAV"))
 REC516171 <- read_sav(paste0(path0, path1, "REC516171.SAV"))
+REC91 <- read_sav(paste0(path0, path1, "REC91.SAV"))
 aux <- left_join(REC0111, REC516171, by = "CASEID")
+aux <- left_join(aux, REC91, by = "CASEID")
 
 dic_aux <- data.frame(
   variable = names(aux),
   stringsAsFactors = FALSE)
 
 mujer <- aux %>% 
-  select(CASEID, V007, V009, V010, V012, V021, V022, V102, V149,
+  select(CASEID, V006, V007, V009, V010, V012, V021, V022, V102, V149,
          V131,AWFACTT,V502, V503, V507, V508, V509,V729, V730, 
          V605, V613, V621, V627, V628, V629,
          V743A, V743B, V743C, V743D, V743E, V743F, 
          V744A, V744B, V744C, V744D, V744E, V746,
-         V133, V512, V715)
+         V133, V512, V715, AWFACTE, S111)
 
 dic <- data.frame(
   variable = names(mujer),
@@ -38,7 +40,9 @@ path1 <- "datos_2015/"
 
 REC0111 <- read_sav(paste0(path0, path1, "REC0111.SAV"))
 REC516171 <- read_sav(paste0(path0, path1, "RE516171.SAV"))
+REC91 <- read_sav(paste0(path0, path1, "REC91.SAV"))
 aux <- left_join(REC0111, REC516171, by = "CASEID")
+aux <- left_join(aux, REC91, by = "CASEID")
 
 dic_aux <- data.frame(
   variable = names(aux),
@@ -46,12 +50,12 @@ dic_aux <- data.frame(
   stringsAsFactors = FALSE)
 
 mujer <- aux %>% 
-  select(CASEID, V007, V009, V010, V012, V021, V022, V102, V149,
+  select(CASEID, V006, V007, V009, V010, V012, V021, V022, V102, V149,
          V131,AWFACTT,V502, V503, V507, V508, V509,V729, V730, 
          V605, V613, V621, V627, V628, V629,
          V743A, V743B, V743C, V743D, V743E, V743F, 
          V744A, V744B, V744C, V744D, V744E, V746,
-         V133, V512, V715)
+         V133, V512, V715, AWFACTE, S111)
 
 dic <- data.frame(
   variable = names(mujer),
@@ -68,20 +72,31 @@ path1 <- "datos_2020/"
 
 REC0111 <- read_sav(paste0(path0, path1, "REC0111.SAV"))
 REC516171 <- read_sav(paste0(path0, path1, "RE516171.SAV"))
+REC91 <- read_sav(paste0(path0, path1, "REC91.SAV"))
 aux <- left_join(REC0111, REC516171, by = "CASEID")
+aux <- left_join(aux, REC91, by = "CASEID")
 
 dic_aux <- data.frame(
   variable = names(aux),
   label = sapply(aux, function(x) attr(x, "label")),
   stringsAsFactors = FALSE)
 
+# La base no incluye el mes de la entrevista
+# En esta ronda se redujo el numero de preguntas en la modalidad telefonica 
+# (que se implemento en el marco de la pandemia). 
+# Hay varios NA (cerca de la mitad) en la variable del idioma.
+
+table(REC516171$V502, useNA = "ifany")
+table(REC516171$V501, REC516171$V502, useNA = "ifany")
+summary(REC516171$V508)
+
 mujer <- aux %>% 
-  select(CASEID, V007, V009, V010, V012, V021, V022, V102, V149,
+  select(CASEID, V005, V007, V008, V009, V010, V012, V021, V022, V102, V149,
          V131,AWFACTT,V502, V503, V507, V508, V509,V729, V730, 
          V605, V613, V621, V627, V628, V629,
          V743A, V743B, V743C, V743D, V743E, V743F, 
          V744A, V744B, V744C, V744D, V744E, V746,
-         V133, V512, V715)
+         V133, V512, V715, AWFACTE, S111)
 
 dic <- data.frame(
   variable = names(mujer),
@@ -98,7 +113,9 @@ path1 <- "datos_2025/"
 
 REC0111 <- read_sav(paste0(path0, path1, "REC0111_2025.SAV"))
 REC516171 <- read_sav(paste0(path0, path1, "RE516171_2025.SAV"))
+REC91 <- read_sav(paste0(path0, path1, "REC91_2025.SAV"))
 aux <- left_join(REC0111, REC516171, by = "CASEID")
+aux <- left_join(aux, REC91, by = "CASEID")
 
 dic_aux <- data.frame(
   variable = names(aux),
@@ -106,12 +123,12 @@ dic_aux <- data.frame(
   stringsAsFactors = FALSE)
 
 mujer <- aux %>% 
-  select(CASEID, V007, V009, V010, V012, V021, V022, V102, V149,
+  select(CASEID, V007, V008, V009, V010, V012, V021, V022, V102, V149,
          V131,AWFACTT,V502, V503, V507, V508, V509,V729, V730, 
          V605, V613, V621, V627, V628, V629,
          V743A, V743B, V743C, V743D, V743E, V743F, 
          V744A, V744B, V744C, V744D, V744E, V746,
-         V133, V512, V715)
+         V133, V512, V715, AWFACTE, S111)
 
 dic <- data.frame(
   variable = names(mujer),
