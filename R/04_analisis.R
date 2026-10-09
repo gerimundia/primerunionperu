@@ -36,12 +36,15 @@ datos$completo <- complete.cases(datos[, c("id","upm","strata","weight",
                                            "tiempo","evento","edad","cohorte",
                                            "area",
                                            "niveleduc", 
-                                           "escol","escol_perc")])
+                                           "escol","escol_perc", "escol_cuantil")])
 
 table(datos$completo)
 prop.table(table(datos$completo, useNA = "ifany"))
 table(datos$completo, datos$anio_entrevista, useNA="ifany")
 prop.table(table(datos$completo, datos$anio_entrevista, useNA="ifany"), margin=2)
+# View(datos[completo==F, c("id","upm","strata","weight",
+#            "tiempo","evento","algunavezcasada","edad","cohorte",
+#            "area", "niveleduc", "escol","escol_perc", "escol_cuantil")])
 
 
 # Ventana de observacion ----
@@ -68,6 +71,8 @@ dim(sub_disenio$variables)
 114796
 
 # Descriptivo ----
+
+# KM por cohorte
 km <- svykm(Surv(tiempo, evento) ~ cohorte2, design = sub_disenio)
 km
 
@@ -101,19 +106,84 @@ ggsave(last_plot(), file="output/km_cohorte.jpeg",
        units = "cm", width = 12, height = 10, dpi = 400)
 
 
+# KM por cuantil
+km <- svykm(Surv(tiempo, evento) ~ escol_cuantil, design = sub_disenio)
+km
+
+datos_km <- do.call(rbind, lapply(names(km), function(g) {
+  x <- km[[g]]
+  data.frame(
+    tiempo = x$time,
+    supervivencia = x$surv,
+    escol_cuantil = g)
+}))
+
+datos_km$propacum <- 1 - datos_km$supervivencia
+
+datos_km %>% 
+  filter(tiempo>=15) %>% 
+  ggplot(aes(x = tiempo, y = propacum, color = escol_cuantil)) +
+  scale_x_continuous(breaks = seq(15, 50, 10)) +
+  geom_step(linewidth = 0.8) +
+  labs(x = "Edad", 
+       y = "Proporción acumulada", 
+       color = "Cuantil",
+       fill = "Cuantil") +
+  theme_minimal() +
+  theme(axis.text = element_text(size=11), 
+        axis.title = element_text(size=13), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, r = 10, b = 0, l = 0)), 
+        legend.text = element_text(size=12))
+
+ggsave(last_plot(), file="output/km_cuantil.jpeg", 
+       units = "cm", width = 12, height = 10, dpi = 400)
+
+
+
+# KM por area
+km <- svykm(Surv(tiempo, evento) ~ area, design = sub_disenio)
+km
+
+datos_km <- do.call(rbind, lapply(names(km), function(g) {
+  x <- km[[g]]
+  data.frame(
+    tiempo = x$time,
+    supervivencia = x$surv,
+    area = g)
+}))
+
+datos_km$propacum <- 1 - datos_km$supervivencia
+
+datos_km %>% 
+  filter(tiempo>=15) %>% 
+  ggplot(aes(x = tiempo, y = propacum, color = area)) +
+  scale_x_continuous(breaks = seq(15, 50, 10)) +
+  geom_step(linewidth = 0.8) +
+  labs(x = "Edad", 
+       y = "Proporción acumulada", 
+       color = "Área",
+       fill = "Área") +
+  theme_minimal() +
+  theme(axis.text = element_text(size=11), 
+        axis.title = element_text(size=13), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, r = 10, b = 0, l = 0)), 
+        legend.text = element_text(size=12))
+
+ggsave(last_plot(), file="output/km_area.jpeg", 
+       units = "cm", width = 12, height = 10, dpi = 400)
+
+
 # Modelo ----
 modelo1 <- svycoxph(Surv(tiempo, evento) ~ cohorte2 
                     + edad, 
                     design = sub_disenio)
 
-modelo2 <- svycoxph(Surv(tiempo, evento) ~ cohorte2 + escol_perc 
-                    + edad, 
+modelo2 <- svycoxph(Surv(tiempo, evento) ~ cohorte2 + escol_perc + edad, 
                     design = sub_disenio)
 
-modelo3 <- svycoxph(Surv(tiempo, evento) ~ cohorte2 + escol_perc + edad, 
-                    design = sub_disenio)
-
-modelo4 <- svycoxph(Surv(tiempo, evento) ~ cohorte2 + escol_perc + area + edad, 
+modelo3 <- svycoxph(Surv(tiempo, evento) ~ cohorte2 + escol_perc + area + edad, 
                     design = sub_disenio)
 
 summary(modelo3)
@@ -123,7 +193,7 @@ summary(modelo3)
 exp(-0.0097023)
 (1 - 0.9903446)*100
 
-modelo_tab <- data.frame(summary(modelo4)$conf.int) 
+modelo_tab <- data.frame(summary(modelo3)$conf.int) 
 modelo_tab$term <- row.names(modelo_tab)
 modelo_tab$etiqueta <- c("Cohorte 1960-1969", "Cohorte 1970-1979", 
                          "Cohorte 1990-1999", "Cohorte 2000-2009", 
