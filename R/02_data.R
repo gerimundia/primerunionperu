@@ -264,6 +264,8 @@ diccionario_2025 <- dic
 
 
 # Save ----
-save(mujer_2010, mujer_2015, mujer_2019, mujer_2020, mujer_2025, 
-     diccionario_2010, diccionario_2015, diccionario_2019, diccionario_2020,
-     diccionario_2025, file="data/rawdata.RData")
+save(mujer_2000, mujer_2006, mujer_2010, mujer_2015, 
+     mujer_2019, mujer_2020, mujer_2025, 
+     diccionario_2000, diccionario_2006, diccionario_2010, 
+     diccionario_2015, diccionario_2019, diccionario_2020, diccionario_2025, 
+     file="data/rawdata.RData")
